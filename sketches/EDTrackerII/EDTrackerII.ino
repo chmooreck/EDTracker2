@@ -623,76 +623,53 @@ void loop()
 
 void parseInput()
 {
-  if (Serial.available() > 0)
+  while (Serial.available() > 0)
   {
     // read the incoming byte:
     byte command = Serial.read();
-
-
-
-    //    if (command == 'e' || command == 'E' ||
-    //        command == 'f' || command == 'F' ||
-    //        command == 'c' || command == 'C' ||
-    //        command == 'd' || command == 'G')
-    //if (
-    //(command >= 'c' && command <= 'f') ||
-    //(command >= 'E' && command <= 'G') ||
-    //command == 'C')
-    //      {
 
     bool scale = false;
     if (command == 'c')
     {
       yawScale += 0.25;
       scale = true;
-    }
-    if (command == 'C')
+    } 
+    else if (command == 'C')
     {
       yawScale += 1.0;
       scale = true;
-    }
-
-    if (command == 'd')
+    } 
+    else if (command == 'd')
     {
       yawScale -= 0.25;
       scale = true;
-    }
-    if (command == 'G')
+    } 
+    else if (command == 'G')
     {
       yawScale -= 1.0;
       scale = true;
-    }
-
-    if (command == 'e')
+    } 
+    else if (command == 'e')
     {
       pitchScale += 0.25;
       scale = true;
-    }
-    if (command == 'E')
+    } 
+    else if (command == 'E')
     {
       pitchScale += 1.0;
       scale = true;
-    }
-
-    if (command == 'f')
+    } 
+    else if (command == 'f')
     {
       pitchScale -= 0.25;
       scale = true;
-    }
-    if (command == 'F')
+    } 
+    else if (command == 'F')
     {
       pitchScale -= 1.0;
       scale = true;
     }
-    if (scale)
-    {
-      setScales();
-      scl();
-    }
-
-    //    }
-    //else
-    if (command == 'S')
+    else if (command == 'S')
     {
       outputMode = OFF;
       Serial.println("S"); //silent
@@ -722,7 +699,7 @@ void parseInput()
     else if (command == 'V')
     {
       Serial.println("V"); //verbose
-supresscentring=false;
+      supresscentring=false;
       //Serial.print("I\t");
       //Serial.println(infoString);
       sendInfo();
@@ -784,10 +761,6 @@ supresscentring=false;
       //recalibrate offsets
       recenter();
     }
-    else if (command == 'H')
-    {
-      Serial.println("H"); // Hello
-    }
     else if (command == 'D')
     {
       //Save Drift offset
@@ -809,24 +782,26 @@ supresscentring=false;
     {
       xDriftComp = xDriftComp - 0.01;
       writeIntEE(EE_XDRIFTCOMP, (int)(xDriftComp * 256.0));
+      Serial.print("a\t");
+      Serial.println(xDriftComp);
     }
     else if (command == 'A')
     {
       xDriftComp = xDriftComp + 0.01;
       writeIntEE(EE_XDRIFTCOMP, (int)(xDriftComp * 256.0));
+      Serial.print("A\t");
+      Serial.println(xDriftComp);
     }
     else if (command =='^')
     {
-      supresscentring=!supresscentring;
+      supresscentring =! supresscentring;
       sendByte('^', supresscentring);
     }
-    //    else if (command == 'F')
-    //    {
-    //      pushBias2DMP();
-    //    }
-
-//    while (Serial.available() > 0)
-//      command = Serial.read();
+    if (scale)
+    {
+      setScales();
+      scl();
+    }
   }
 }
 
